@@ -26,9 +26,8 @@ var urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
-function addURL(long){
+function makeShort(){
   let shortURL = generateRandomString();
-  urlDatabase[shortURL] = long.longURL;
   return shortURL;
 }
 
@@ -51,11 +50,21 @@ app.get("/urls/new", (req, res) => {
 });
 
 app.post("/urls", (req, res) => {
-  if(urlDatabase.hasOwnProperty(req.body) === false){
-    var short = addURL(req.body);
-    console.log('works');  // Log the POST request body to the console
+  let short = makeShort();
+  let exist = false;
+  for(key in urlDatabase){
+    if(urlDatabase.key === req.body.longURL){
+      exist = true
+      break
+    }
   }
-  res.redirect(`/urls/${short}`)
+  if(exist === false){
+    urlDatabase[short] = req.body.longURL;
+    // console.log('works');  // Log the POST request body to the console
+    res.redirect(`/urls/${short}`)
+  } else {
+    res.redirect(`/urls/`)
+  }
 });
 
 app.get("/u/:shortURL", (req, res) => {
