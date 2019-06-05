@@ -49,6 +49,11 @@ app.get("/urls/new", (req, res) => {
   res.render("urls_new");
 });
 
+app.post("/urls/:short/delete", (req, res) => {
+  delete urlDatabase[req.params.short];
+  res.redirect('/urls');
+})
+
 app.post("/urls", (req, res) => {
   let short = makeShort();
   let exist = false;

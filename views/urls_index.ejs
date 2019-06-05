@@ -15,6 +15,11 @@
     <h1>My URLs</h1>
     <% for(let short in urls){ %>
       <p><em><%= urls[short] %></em> is shortened to <em><%= short %></em></p>
+      <form class="form-inline" action="urls/<%= short %>/delete" method="POST">
+        <div class="form-group mb-2">
+          <button class="btn btn-primary">delete</button>
+        </div>
+      </form>
     <% } %>
   <% } %>
 </body>
