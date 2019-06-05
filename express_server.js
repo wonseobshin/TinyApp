@@ -1,6 +1,7 @@
 var express = require("express");
 var app = express();
 var PORT = 8080; // default port 8080
+const view = './views/'
 
 app.set('view engine', 'ejs');
 
@@ -15,6 +16,11 @@ app.get("/", (req, res) => {
 
 app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
+});
+
+app.get("/urls", (req, res) => {
+  let templateVars = { urls: urlDatabase };
+  res.render("urls_index", templateVars);
 });
 
 app.get("/hello", (req, res) => {
