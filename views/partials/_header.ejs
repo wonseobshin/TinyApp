@@ -2,7 +2,7 @@
   <header>
     <h1><a href=/urls>TinyApp</a></h1>
     <p><a href=/urls/new>Create New TinyURL</a></p>
-    <% if(username.length === 0){ %>
+    <% if(username.length === 0){ %> <%# IS THIS TOO HAX?? %>
       <% console.log('username exists!') ;%>
       <% console.log(username) ;%>
       <form class="form-inline" action="/login" method="POST">
@@ -11,6 +11,9 @@
       </form>
     <% } else { %>
       <p>Hello, <%= username %></p>
+      <form class="form-inline" action="/logout" method="POST">
+        <button type="submit" class="btn btn-primary">Sign-out</button>
+      </form>
     <% } %>
   </header>
 </html>

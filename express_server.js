@@ -67,6 +67,13 @@ app.post("/login", (req, res) => {
   console.log('Cookies: ', req.cookies)
 })
 
+app.post("/logout", (req, res) => {
+  res.cookie('username', '')
+  res.redirect('/urls');
+
+  console.log('Cookies: ', req.cookies)
+})
+
 app.post("/urls/:short/update", (req, res) =>{
   let short = req.params.short
   console.log(short);
