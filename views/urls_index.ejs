@@ -9,10 +9,12 @@
   <title>TinyApp</title>
 </head>
 <body style="font-size:20px; padding:50px;">
-      <!-- This line will not show up on the page -->
-  <% if(urls) {%>
-    <!-- This line will only show if greeting is truthy -->
-    <h1><%= urls %></h1>
-  <% }%>
+  <% include ./partials/_header %>
+  <% if(urls) { %>
+    <h1>My URLs</h1>
+
+
+    <p><%= JSON.stringify(urls).split(',').join('\n') %></p>
+  <% } %>
 </body>
 </html>

@@ -35,3 +35,8 @@ app.get("/hello", (req, res) => {
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
+
+/*  <p><% var shortURLs = urls.key() %></p>
+    <% shortURLs.forEach(function(element){ <%>
+    <p><% %></p>
+    <% }) %> */

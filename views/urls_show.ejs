@@ -9,8 +9,9 @@
   <title>TinyApp</title>
 </head>
 <body style="font-size:20px; padding:50px;">
-
-    <h1><%= longURL %> is shortened to <%= shortURL %></h1>
+  <% include ./partials/_header %>
+  <!-- <h1>My URLs</h1> -->
+  <p><%= longURL %> is shortened to <%= shortURL %></p>
 
 </body>
 </html>
