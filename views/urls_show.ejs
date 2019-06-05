@@ -11,8 +11,11 @@
 <body style="font-size:20px; padding:50px;">
 
   <% include ./partials/_header %>
-  <h1>My URLs</h1>
-  <p><em><%= longURL %></em> is shortened to <em><%= shortURL %></em></p>
+  <h2>Short URL: <em><%= shortURL %></em></h2>
+  <form class="form-inline" action="/urls/<%= shortURL %>/update" method="POST">
+    <input class="form-control" type="text" name="newLong" placeholder="http://" style="width: 300px; margin: 1em">
+    <button type="submit" class="btn btn-primary">Update</button>
+  </form>
 
 </body>
 </html>
