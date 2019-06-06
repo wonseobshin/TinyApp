@@ -62,6 +62,14 @@ app.get("/register", (req, res) => {
   res.render("urls_reg");
 });
 
+app.get("/login", (req,res) =>{
+  let templateVars = {
+    user: users[req.cookies.user_id],
+    database: users,
+  }
+  res.render("login", templateVars)
+})
+
 app.get("/", (req, res) => {
   res.send("Hello!");
 });
@@ -73,16 +81,15 @@ app.get("/urls.json", (req, res) => {
 app.get("/urls", (req, res) => {
   let templateVars = {
     urls: urlDatabase,
-    user: req.cookies.user_id,
-    database: users,
+    user: users[req.cookies.user_id],
+  //  database: users,
   }
   res.render("urls_index", templateVars);
 });
 
 app.get("/urls/new", (req, res) => {
   let templateVars = {
-    user: req.cookies.user_id,
-    database: users,
+    user: users[req.cookies.user_id],
   }
   res.render("urls_new", templateVars);
 });
@@ -100,14 +107,14 @@ app.post("/login", (req, res) => {
 app.post("/register", (req, res) => {
   let email = req.body.email;
   let password = req.body.password;
-  console.log("email: ",email);
-  console.log("password: ",password);
+  // console.log("email: ",email);
+  // console.log("password: ",password);
   if(email === '' || password === '' || checkUsersfor(email)){
     res.status(400)
     res.send('Invalid email or password');
   } else {
     let id = generateRandomString();
-    console.log("id: ",id);
+    // console.log("id: ",id);
     users[id] = {
       "id" : '',
       "email" : '',
@@ -168,8 +175,7 @@ app.get("/u/:shortURL", (req, res) => {
 
 app.get("/urls/:shortURL", (req, res) => {
   let templateVars = {
-    user: req.cookies.user_id,
-    database: users,
+    user: users[req.cookies.user_id],
     shortURL: req.params.shortURL,
     longURL: urlDatabase[req.params.shortURL],
   }
