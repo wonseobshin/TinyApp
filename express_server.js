@@ -28,11 +28,35 @@ var urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
+var users = {
+  "user1": {
+    id: "user1",
+    email: "user@example.com",
+    password: "pass1"
+  },
+  "user2": {
+    id: "user2",
+    email: "user2@example.com",
+    password: "pass2"
+  }
+}
+
+function checkUsersfor(email){
+  for(let id in users){
+    if(users[id].email === email)
+      return true
+  }
+  return false
+}
+
 function makeShort(){
   let shortURL = generateRandomString();
   return shortURL;
 }
 
+app.get("/register", (req, res) => {
+  res.render("urls_reg");
+});
 
 app.get("/", (req, res) => {
   res.send("Hello!");
@@ -65,6 +89,33 @@ app.post("/login", (req, res) => {
   res.redirect('/urls');
 
   console.log('Cookies: ', req.cookies)
+})
+
+app.post("/register", (req, res) => {
+  let email = req.body.email;
+  let password = req.body.password;
+  console.log("email: ",email);
+  console.log("password: ",password);
+  if(email === '' || password === '' || checkUsersfor(email)){
+    res.status(400)
+    res.send('Invalid email or password');
+  } else {
+    let id = generateRandomString();
+    console.log("id: ",id);
+    users[id] = {
+      "id" : '',
+      "email" : '',
+      "password" : '',
+    }
+    users[id]['id'] = id;
+    users[id]['email'] = email;
+    users[id]['password'] = password;
+
+    console.log('new user ', users[id]);
+
+    res.cookie('user_id', id)
+    res.redirect('/urls');
+  }
 })
 
 app.post("/logout", (req, res) => {
