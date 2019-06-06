@@ -13,6 +13,8 @@ const view = './views/'
 
 app.set('view engine', 'ejs');
 
+
+
 //improvised code from stackOverflow https://stackoverflow.com/questions/1349404/generate-random-string-characters-in-javascript
 function generateRandomString() {
    var rand           = '';
@@ -38,7 +40,7 @@ var users = {
     id: "user2",
     email: "user2@example.com",
     password: "pass2"
-  }
+  },
 }
 
 function checkUsersfor(email){
@@ -55,6 +57,8 @@ function makeShort(){
 }
 
 app.get("/register", (req, res) => {
+  res.cookie('user_id', '');
+  console.log(users[req.cookies.user_id]);
   res.render("urls_reg");
 });
 
@@ -69,14 +73,16 @@ app.get("/urls.json", (req, res) => {
 app.get("/urls", (req, res) => {
   let templateVars = {
     urls: urlDatabase,
-    username: req.cookies["username"],
-  };
+    user: req.cookies.user_id,
+    database: users,
+  }
   res.render("urls_index", templateVars);
 });
 
 app.get("/urls/new", (req, res) => {
   let templateVars = {
-    username: req.cookies["username"]
+    user: req.cookies.user_id,
+    database: users,
   }
   res.render("urls_new", templateVars);
 });
@@ -85,7 +91,7 @@ app.post("/login", (req, res) => {
   let name = req.body.username;
   console.log(name);
 
-  res.cookie('username', name)
+  res.cookie('user_id', name)
   res.redirect('/urls');
 
   console.log('Cookies: ', req.cookies)
@@ -111,7 +117,7 @@ app.post("/register", (req, res) => {
     users[id]['email'] = email;
     users[id]['password'] = password;
 
-    console.log('new user ', users[id]);
+    // console.log( users);
 
     res.cookie('user_id', id)
     res.redirect('/urls');
@@ -119,7 +125,7 @@ app.post("/register", (req, res) => {
 })
 
 app.post("/logout", (req, res) => {
-  res.cookie('username', '')
+  res.cookie('user_id', '')
   res.redirect('/urls');
 
   console.log('Cookies: ', req.cookies)
@@ -162,7 +168,8 @@ app.get("/u/:shortURL", (req, res) => {
 
 app.get("/urls/:shortURL", (req, res) => {
   let templateVars = {
-    username: req.cookies["username"],
+    user: req.cookies.user_id,
+    database: users,
     shortURL: req.params.shortURL,
     longURL: urlDatabase[req.params.shortURL],
   }
