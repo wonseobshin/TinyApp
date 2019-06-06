@@ -46,9 +46,9 @@ var users = {
 function checkUsersfor(email){
   for(let id in users){
     if(users[id].email === email)
-      return true
+      return id
   }
-  return false
+  return false;
 }
 
 function makeShort(){
@@ -85,6 +85,7 @@ app.get("/urls", (req, res) => {
   //  database: users,
   }
   res.render("urls_index", templateVars);
+  console.log( users);
 });
 
 app.get("/urls/new", (req, res) => {
@@ -95,20 +96,33 @@ app.get("/urls/new", (req, res) => {
 });
 
 app.post("/login", (req, res) => {
-  let name = req.body.username;
-  console.log(name);
-
-  res.cookie('user_id', name)
-  res.redirect('/urls');
-
-  console.log('Cookies: ', req.cookies)
+  let email = req.body.email;
+  let password = req.body.password;
+  // console.log("email: ",email);
+  // console.log("password: ",password);
+  if(!checkUsersfor(email)){
+    console.log('email not in database')
+    res.status(403);
+    res.send('password or email is invalid');
+  } else {
+    console.log('email IS in database')
+    let id = checkUsersfor(email);
+    console.log(id);
+    if(users[id].password === password){
+      res.cookie('user_id', id)
+      res.redirect('/urls');
+    } else {
+      console.log('password does not match')
+      res.status(403);
+      res.send('password or email is invalid');
+    }
+  }
 })
 
 app.post("/register", (req, res) => {
   let email = req.body.email;
   let password = req.body.password;
-  // console.log("email: ",email);
-  // console.log("password: ",password);
+
   if(email === '' || password === '' || checkUsersfor(email)){
     res.status(400)
     res.send('Invalid email or password');
@@ -124,7 +138,7 @@ app.post("/register", (req, res) => {
     users[id]['email'] = email;
     users[id]['password'] = password;
 
-    // console.log( users);
+     console.log( users);
 
     res.cookie('user_id', id)
     res.redirect('/urls');
@@ -136,6 +150,7 @@ app.post("/logout", (req, res) => {
   res.redirect('/urls');
 
   console.log('Cookies: ', req.cookies)
+  console.log(users);
 })
 
 app.post("/urls/:short/update", (req, res) =>{

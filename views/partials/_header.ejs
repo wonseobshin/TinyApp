@@ -3,13 +3,12 @@
     <h1><a href=/urls>TinyApp</a></h1>
     <p><a href=/urls/new>Create New TinyURL</a></p>
     <% if(user === undefined){ %>
-      <%# IS THIS TOO HAX?? %>
-      <%# console.log('username exists!') ;%>
-      <%# console.log(user.email) ;%>
-      <form class="form-inline" action="/login" method="POST">
-        <input class="form-control" type="text" name="username" placeholder="John" style="width: 300px; margin: 1em">
+      <a href="/register">
+        <button type="submit" class="btn btn-primary">Sign-up</button>
+      </a>
+      <a href="/login">
         <button type="submit" class="btn btn-primary">Sign-in</button>
-      </form>
+      </a>
     <% } else { %>
       <% console.log("USER IS: ",user) %>
       <p>Hello, <%= user.email %></p>
