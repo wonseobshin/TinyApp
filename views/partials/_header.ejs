@@ -1,7 +1,7 @@
 <html>
   <header>
     <h1><a href=/urls>TinyApp</a></h1>
-    <p><a href=/urls/new>Create New TinyURL</a></p>
+
     <% if(user === undefined){ %>
       <a href="/register">
         <button type="submit" class="btn btn-primary">Sign-up</button>
@@ -10,6 +10,7 @@
         <button type="submit" class="btn btn-primary">Sign-in</button>
       </a>
     <% } else { %>
+      <p><a href=/urls/new>Create New TinyURL</a></p>
       <% console.log("USER IS: ",user) %>
       <p>Hello, <%= user.email %></p>
       <form class="form-inline" action="/logout" method="POST">

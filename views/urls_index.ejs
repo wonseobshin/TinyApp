@@ -11,15 +11,22 @@
 <body style="font-size:20px; padding:50px;">
 
   <% include ./partials/_header %>
-  <% if(urls) { %>
+  <% if(user&&urls) { %>
     <h1>My URLs</h1>
+
+    <% console.log(user.id) %>
+
     <% for(let short in urls){ %>
-      <p><em><%= urls[short] %></em> is shortened to <em><%= short %></em></p>
-      <form class="form-inline" action="urls/<%= short %>/delete" method="POST">
-        <div class="form-group mb-2">
-          <button class="btn btn-primary">delete</button>
-        </div>
-      </form>
+      <% console.log(urls[short].userID) %>
+
+      <% if (user.id === urls[short].userID){ %>
+        <p><em><%= urls[short].longURL %></em> is shortened to <a href="/urls/<%= short %>"><em><%= short %></em></p></a>
+        <form class="form-inline" action="urls/<%= short %>/delete" method="POST">
+          <div class="form-group mb-2">
+            <button class="btn btn-primary">delete</button>
+          </div>
+        </form>
+      <% } %>
     <% } %>
   <% } %>
 </body>
