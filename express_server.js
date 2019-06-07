@@ -31,7 +31,7 @@ var urlDatabase = {
 };
 
 var users = {
-  "OptimusPrime" : {
+  "OP" : {
     id: "OP",
     email: "wonseob07@gmail.com",
     password: "123"
@@ -163,15 +163,31 @@ app.post("/logout", (req, res) => {
 })
 
 app.post("/urls/:short/update", (req, res) =>{
-  let short = req.params.short
-  // console.log(short);
-  urlDatabase[short].longURL = req.body.newLong;
-  res.redirect(`/urls/${short}`);
+  var short = req.params.short
+  console.log("CREATOR IS: ", urlDatabase[short].userID)
+  console.log("CURRENT USER IS: ", users[req.cookies.user_id])
+  console.log("CURRENT LONG: ", urlDatabase[short].longURL)
+  console.log("NEW LONG: ", req.body.newLong)
+
+  if(urlDatabase[short].userID === users[req.cookies.user_id].id){
+    // console.log(short);
+    urlDatabase[short].longURL = req.body.newLong;
+  } else {
+    console.log("YIKES");
+  }
+  res.redirect(`/urls/`);
 })
 
 app.post("/urls/:short/delete", (req, res) => {
-  delete urlDatabase[req.params.short];
-  res.redirect('/urls');
+  var short = req.params.short;
+  console.log("SHORT IS THIS RIGHT HERE HAHA",short);
+
+  if(urlDatabase[short].userID === users[req.cookies.user_id].id){
+    delete urlDatabase[req.params.short];
+  } else {
+    console.log("YIKES");
+  }
+  res.redirect(`/urls/`);
 })
 
 app.post("/urls", (req, res) => {
@@ -186,11 +202,11 @@ app.post("/urls", (req, res) => {
   if(exist === false){
     let short = generateRandomString();
     console.log(short);
-    console.log(urlDatabase[short])
     console.log(req.body.longURL)
     urlDatabase[short]={longURL : '', userID : ''}
     urlDatabase[short].longURL = req.body.longURL;
     urlDatabase[short].userID = req.cookies.user_id;
+    console.log(urlDatabase)
     // console.log('works');  // Log the POST request body to the console
     res.redirect(`/urls/${short}`)
   } else {
@@ -210,7 +226,6 @@ app.get("/urls/:shortURL", (req, res) => {
     longURL: urlDatabase[req.params.shortURL].longURL,
   }
   res.render("urls_show", templateVars);
-  // res.redirect(templateVars.longURL);
 });
 
 app.get("/hello", (req, res) => {
