@@ -34,16 +34,11 @@ function generateRandomString() {
 }
 
 var urlDatabase = {
-  "b2xVn2": {longURL: "http://www.lighthouselabs.ca", userID: "OP"},
-  "9sm5xK": {longURL: "http://www.google.com", userID: "OP"},
+  "b2xVn2": {longURL: "http://www.lighthouselabs.ca", userID: "sh9r87"},
+  "9sm5xK": {longURL: "http://www.google.com", userID: "q2f5Ka"},
 };
 
 var users = {
-  "OP" : {
-    id: "OP",
-    email: "wonseob07@gmail.com",
-    password: "123"
-  },
   "user1": {
     id: "user1",
     email: "user@example.com",
@@ -65,15 +60,12 @@ function checkUsersfor(email){
 }
 
 app.get("/register", (req, res) => {
-  //res.cookie('user_id', '');
   req.session.user_id = '';
-  // console.log(users[req.cookies.user_id]);
   res.render("urls_reg");
 });
 
 app.get("/login", (req,res) =>{
   let templateVars = {
-    //user: users[req.cookies.user_id],
     user: users[req.session.user_id],
     database: users,
   }
@@ -91,9 +83,7 @@ app.get("/urls.json", (req, res) => {
 app.get("/urls", (req, res) => {
   let templateVars = {
     urls: urlDatabase,
-    //user: users[req.cookies.user_id],
     user: users[req.session.user_id],
-  //  database: users,
   }
   res.render("urls_index", templateVars);
     console.log(templateVars);
@@ -103,16 +93,13 @@ app.get("/urls", (req, res) => {
 
 app.get("/urls/new", (req, res) => {
   let templateVars = {
-   // user: users[req.cookies.user_id],
    user : users[req.session.user_id],
   }
 
-  //if(users[req.cookies.user_id] === undefined){
   if(users[req.session.user_id] === undefined){
     res.status(400)
     res.send('Please log in to use this function')
   } else {
-    // console.log(req.cookies.user_id)
     res.render("urls_new", templateVars);
   }
 });
@@ -120,8 +107,6 @@ app.get("/urls/new", (req, res) => {
 app.post("/login", (req, res) => {
   let email = req.body.email;
   let password = bcrypt.hashSync(req.body.password, salt);
-  // console.log("email: ",email);
-  // console.log("password: ",password);
   if(!checkUsersfor(email)){
     console.log('email not in database')
     res.status(403);
@@ -131,7 +116,6 @@ app.post("/login", (req, res) => {
     let id = checkUsersfor(email);
     console.log(id);
     if(bcrypt.compareSync(req.body.password, users[id].password)){
-      //res.cookie('user_id', id)
       req.session.user_id = id;
       res.redirect('/urls');
     } else {
@@ -151,7 +135,6 @@ app.post("/register", (req, res) => {
     res.send('Invalid email or password');
   } else {
     let id = generateRandomString();
-    // console.log("id: ",id);
     users[id] = {
       "id" : '',
       "email" : '',
@@ -161,21 +144,14 @@ app.post("/register", (req, res) => {
     users[id]['email'] = email;
     users[id]['password'] = password;
 
-     // console.log( users);
-
-    //res.cookie('user_id', id)
     req.session.user_id = id;
     res.redirect('/urls');
   }
 })
 
 app.post("/logout", (req, res) => {
-  //res.cookie('user_id', '')
   req.session.user_id = '';
   res.redirect('/urls');
-
-  // console.log('Cookies: ', req.cookies)
-  // console.log(users);
 })
 
 app.post("/urls/:short/update", (req, res) =>{
@@ -186,7 +162,6 @@ app.post("/urls/:short/update", (req, res) =>{
   console.log("NEW LONG: ", req.body.newLong)
 
   if(urlDatabase[short].userID === users[req.session.user_id].id){
-    // console.log(short);
     urlDatabase[short].longURL = req.body.newLong;
   } else {
     console.log("YIKES");
@@ -223,7 +198,6 @@ app.post("/urls", (req, res) => {
     urlDatabase[short].longURL = req.body.longURL;
     urlDatabase[short].userID = req.session.user_id;
     console.log(urlDatabase)
-    // console.log('works');  // Log the POST request body to the console
     res.redirect(`/urls/${short}`)
   } else {
     res.redirect(`/urls/`)
@@ -252,8 +226,4 @@ app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
 
-/*  <p><% var shortURLs = urls.key() %></p>
-    <% shortURLs.forEach(function(element){ <%>
-    <p><% %></p>
-    <% }) %> */
 
