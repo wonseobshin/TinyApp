@@ -1,8 +1,11 @@
-var express = require("express");
-var app = express();
-var PORT = 8080; // default port 8080
+const express = require("express");
+const app = express();
+const PORT = 8080; // default port 8080
 const cookieParser =require('cookie-parser')
+const bcrypt =require('bcrypt-nodejs')
 
+
+var salt = bcrypt.genSaltSync(10);
 const morgan = require('morgan');
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended: true}));
@@ -87,7 +90,7 @@ app.get("/urls", (req, res) => {
   res.render("urls_index", templateVars);
     console.log(templateVars);
 
-  // console.log( users);
+  console.log( users);
 });
 
 app.get("/urls/new", (req, res) => {
@@ -106,7 +109,7 @@ app.get("/urls/new", (req, res) => {
 
 app.post("/login", (req, res) => {
   let email = req.body.email;
-  let password = req.body.password;
+  let password = bcrypt.hashSync(req.body.password, salt);
   // console.log("email: ",email);
   // console.log("password: ",password);
   if(!checkUsersfor(email)){
@@ -117,7 +120,7 @@ app.post("/login", (req, res) => {
     console.log('email IS in database')
     let id = checkUsersfor(email);
     console.log(id);
-    if(users[id].password === password){
+    if(bcrypt.compareSync(req.body.password, users[id].password)){
       res.cookie('user_id', id)
       res.redirect('/urls');
     } else {
@@ -130,9 +133,9 @@ app.post("/login", (req, res) => {
 
 app.post("/register", (req, res) => {
   let email = req.body.email;
-  let password = req.body.password;
+  let password = bcrypt.hashSync(req.body.password, salt);
 
-  if(email === '' || password === '' || checkUsersfor(email)){
+  if(email === '' || req.body.password === '' || checkUsersfor(email)){
     res.status(400)
     res.send('Invalid email or password');
   } else {
