@@ -156,27 +156,28 @@ app.post("/logout", (req, res) => {
 });
 
 //PUT to update URL
-app.put("/urls/:short/update", (req, res) =>{//removed /update
-  var short = req.params.short;
+app.post("/urls/:short/update", (req, res) =>{
+  var short = req.params.short
 
   if(urlDatabase[short].userID === users[req.session.user_id].id){
-    urlDatabase[short].longURL = req.body._method;
+    urlDatabase[short].longURL = req.body.newLong;
   } else {
     res.status(400);
     res.send('Please log in to use this function');
   }
-  res.redirect(`/urls/${short}`);
+  res.redirect(`/urls/`);
 });
 
 //DELTE to delete URL
-app.delete("/urls/:short/delete", (req, res) =>{
+app.post("/urls/:short/delete", (req, res) => {
   var short = req.params.short;
+  console.log("SHORT IS THIS RIGHT HERE HAHA",short);
 
   if(urlDatabase[short].userID === users[req.session.user_id].id){
     delete urlDatabase[req.params.short];
   } else {
     res.status(400);
-    res.send('Please log in to use this function');
+    res.send('Please log in to use this function');;
   }
   res.redirect(`/urls/`);
 });
